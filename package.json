@@ -1,0 +1,15 @@
+{
+  "name": "genocyde",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  },
+  "dependencies": {
+    "phaser": "^3.88.0"
+  }
+}
