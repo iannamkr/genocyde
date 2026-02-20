@@ -3,7 +3,10 @@ import { ANIM_MANIFEST } from '../data/animManifest.js'
 
 // ─── PART Z-ORDER (back → front within container) ─────────────────────────────
 const PART_ORDER = ['RightLeg', 'RightArm', 'Torso', 'Head', 'LeftLeg', 'LeftArm', 'Weapon', 'FX']
-const EXTRA_PARTS = new Set(['Weapon', 'FX'])
+
+// Y offset so each part sprite's bottom edge (origin 0.5,1) aligns with the
+// physics body's bottom (physBody.y + 84/2 = GROUND).  All canvases are 96×84.
+const PART_ORIGIN_Y = 42
 
 // ─── GAME STATES TO PRELOAD ───────────────────────────────────────────────────
 // Add state names here to enable them; must exist in ANIM_MANIFEST.
@@ -103,14 +106,16 @@ export class HostSprite {
     // Visual container — synced to physics body each update()
     this._container = this.scene.add.container(x, y).setDepth(10)
 
-    // Create one sprite per part in z-order
+    // Create one sprite per part in z-order.
+    // origin (0.5, 1) anchors each sprite's bottom-center so the foot line stays
+    // fixed at GROUND regardless of how much artwork fills the canvas top-to-bottom.
     for (const part of PART_ORDER) {
       const tex = this.scene.textures.exists(`${firstState}_${part}_01`)
         ? `${firstState}_${part}_01`
-        : firstKey   // fallback for parts not in first state (Weapon/FX)
+        : firstKey   // fallback for Weapon/FX which don't appear in Idle
 
-      const spr = this.scene.add.sprite(0, 0, tex)
-      spr.setVisible(!EXTRA_PARTS.has(part))   // hide Weapon/FX by default
+      const spr = this.scene.add.sprite(0, PART_ORIGIN_Y, tex).setOrigin(0.5, 1)
+      spr.setVisible(false)   // play('Idle') below sets correct per-part visibility
       this._parts[part] = spr
       this._container.add(spr)
     }
@@ -119,7 +124,8 @@ export class HostSprite {
   }
 
   // ─── PLAY ─────────────────────────────────────────────────────────────────
-  // Plays all parts simultaneously. Handles Weapon/FX visibility.
+  // Plays all parts simultaneously. Updates visibility on every part every time
+  // so no ghost frames from a previous state can linger.
   // For one-shot animations, auto-transitions to cfg.next when done.
 
   play(stateName, force = false) {
@@ -130,18 +136,21 @@ export class HostSprite {
     this._currentState = stateName
     const hasParts = new Set(Object.keys(cfg.parts))
 
-    // Show / hide Weapon and FX
-    for (const extra of EXTRA_PARTS) {
-      this._parts[extra]?.setVisible(hasParts.has(extra))
-    }
-
-    // Play all available parts.
-    // ignoreIfPlaying=!force: force=true always restarts; force=false doesn't re-interrupt a loop.
+    // For every part: show/hide and play/skip — no part is ever left in a stale
+    // visible state from a previous animation.
+    // ignoreIfPlaying=!force: force=true always restarts from frame 1 (keeps parts in sync);
+    // force=false avoids interrupting a loop that's already on the right animation.
     for (const part of PART_ORDER) {
       const spr = this._parts[part]
-      if (!spr || !hasParts.has(part)) continue
-      const animKey = `${stateName}_${part}`
-      if (this.scene.anims.exists(animKey)) spr.play(animKey, !force)
+      if (!spr) continue
+
+      const active = hasParts.has(part)
+      spr.setVisible(active)   // hide parts this state doesn't use → no ghosting
+
+      if (active) {
+        const animKey = `${stateName}_${part}`
+        if (this.scene.anims.exists(animKey)) spr.play(animKey, !force)
+      }
     }
 
     // One-shot → auto-transition on complete.
