@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "gen:anims": "node scripts/genAnimManifest.mjs"
   },
   "devDependencies": {
     "vite": "^6.0.0"
