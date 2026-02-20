@@ -4,9 +4,9 @@ import { C } from '../utils/draw.js'
 
 const W = 1280
 const H = 720
-const CW = 100, CH = 150
-const HOVER_RISE  = 65
-const HOVER_SCALE = 1.28
+const CW = 112, CH = 168
+const HOVER_RISE  = 52
+const HOVER_SCALE = 1.22
 
 // ─── CARD PANEL ───────────────────────────────────────────────────────────────
 // Deck / hand / discard management, Hearthstone fan layout, card execution.
@@ -141,13 +141,14 @@ export class CardPanel {
   }
 
   _getCardFanPos(i, n) {
-    if (n <= 0) return { x: W / 2, y: H - 30, rotation: 0, depth: 155 }
+    if (n <= 0) return { x: W / 2, y: H - 20, rotation: 0.1, depth: 155 }
     const t          = n === 1 ? 0 : (i / (n - 1)) * 2 - 1
-    const spacing    = n === 1 ? 0 : Math.min(115, (W * 0.72) / (n - 1))
+    const spacing    = n === 1 ? 0 : Math.min(CW + 8, (W * 0.85) / (n - 1))
     const totalW     = (n - 1) * spacing
-    const x          = W / 2 - totalW / 2 + i * spacing
-    const y          = H - 30 + t * t * 16
-    const rotation   = t * 0.09
+    const centerX    = W / 2
+    const x          = centerX - totalW / 2 + i * spacing
+    const y          = H - 20
+    const rotation   = 0
     const distCenter = Math.abs(i - (n - 1) / 2)
     const depth      = 155 + Math.round(n - distCenter)
     return { x, y, rotation, depth }
