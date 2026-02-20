@@ -130,6 +130,7 @@ export class CardPanel {
         s.msg.floatText(s.host.sprite.x, s.host.sprite.y - 30, '스트레스 완화', C.PURPLE)
         break
     }
+    if (card.vfx) s.host.playCardVfx(card.vfx, card.vfxTint)
   }
 
   _hitTestCard(px, py, b) {
@@ -167,8 +168,6 @@ export class CardPanel {
     })
     container.setDepth(300)
     glowGfx.clear()
-    glowGfx.lineStyle(4, card.color, 1)
-    glowGfx.strokeRoundedRect(-CW / 2 - 2, -CH / 2 - 2, CW + 4, CH + 4, 7)
     this._cardBounds[i] = { ...this._cardBounds[i], cy: y - HOVER_RISE, rot: 0 }
   }
 
@@ -209,28 +208,10 @@ export class CardPanel {
       strip.fillRect(-CW / 2, CH / 2 - 30, CW, 30)
       container.add(strip)
 
-      const nameTxt = this.scene.add.text(0, CH / 2 - 15, card.name, {
-        fontSize: '10px', fill: C.hex(C.GOLD), fontFamily: 'Galmuri11',
-        fontStyle: 'bold', align: 'center',
-      }).setOrigin(0.5, 0.5)
-      container.add(nameTxt)
-
       const hasHp    = card.hpCost > 0
       const hasSt    = card.stressCost > 0
       const badgeCol = hasHp ? C.RED : hasSt ? C.PURPLE : C.CYAN
       const costNum  = hasHp ? card.hpCost : hasSt ? card.stressCost : 0
-
-      const badge = this.scene.add.graphics()
-      badge.fillStyle(badgeCol, 0.93)
-      badge.fillCircle(-CW / 2 + 15, -CH / 2 + 15, 13)
-      badge.lineStyle(2, 0xffffff, 0.8)
-      badge.strokeCircle(-CW / 2 + 15, -CH / 2 + 15, 13)
-      container.add(badge)
-
-      const costTxt = this.scene.add.text(-CW / 2 + 15, -CH / 2 + 15, `${costNum}`, {
-        fontSize: '11px', fill: '#ffffff', fontFamily: 'Galmuri11', fontStyle: 'bold',
-      }).setOrigin(0.5, 0.5)
-      container.add(costTxt)
 
       const glowGfx = this.scene.add.graphics()
       container.add(glowGfx)

@@ -59,6 +59,10 @@ export class Host {
 
   // ─── PUBLIC ACTIONS ───────────────────────────────────────────────────────
 
+  playCardVfx(vfx, tint) {
+    this._playEffect(vfx, this.sprite.x, this.sprite.y - 20, { scale: 1.4, tint, depth: 52 })
+  }
+
   applyCardCosts(hpCost, stressCost) {
     if (hpCost !== 0)
       this._ps.hp = Phaser.Math.Clamp(this._ps.hp - hpCost, 0, this._ps.maxHp)
@@ -207,7 +211,6 @@ export class Host {
 
     this.scene.msg.showRampageTxt()
     this._playEffect('effAoe', this.sprite.x, this.sprite.y - 20, { scale: 1.4, tint: 0xff2d78, depth: 16 })
-    this._playFX('gSlam', this.sprite.x + 20, GROUND, { scale: 1.2, depth: 16, originY: 1 })
     this.scene.enemies.hitAllInRange(this.sprite.x, this.sprite.y, 220, 40)
 
     const boom = this.scene.add.graphics().setDepth(60)

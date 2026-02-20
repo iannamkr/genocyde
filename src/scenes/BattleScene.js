@@ -60,9 +60,6 @@ export class BattleScene extends Phaser.Scene {
     for (let i = 1; i <= 7; i++) load(`dashDust_${pad(i)}`, `${SPRITE_BASE}/FX/DashDust/DashDust${pad(i)}.png`)
     for (let i = 1; i <= 6; i++) load(`landDust_${pad(i)}`, `${SPRITE_BASE}/FX/LandingDust/LandingDust${pad(i)}.png`)
 
-    // Combat VFX
-    for (let i = 1; i <= 10; i++) load(`gSlam_${pad(i)}`, `${SPRITE_BASE}/Combat/GroundSlam/GroundSlam${pad(i)}.png`)
-
     // Monster spritesheets
     const MB = MONSTER_BASE
     this.load.spritesheet('bugIdle',    `${MB}/BugZ/BugZ/Idle.png`,    { frameWidth: 64,  frameHeight: 64  })
@@ -82,7 +79,13 @@ export class BattleScene extends Phaser.Scene {
 
     // Effect spritesheets
     const EB = EFFECT_BASE
-    this.load.spritesheet('effAoe', `${EB}/Effect Pack #1/Effect Pack #1/Effect 1/Effect 1.png`, { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('effAoe',   `${EB}/Effect Pack #1/Effect Pack #1/Effect 1/Effect 1.png`,    { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('effFire',  `${EB}/Effect Pack #4/Effect Pack #4/Effect 3/Effect 3.png`,    { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('effSpin',  `${EB}/Effect Pack #4/Effect Pack #4/Effect 9/Effect 9.png`,    { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('effFlame', `${EB}/Effect Pack #4/Effect Pack #4/Effect 11/Effect 11.png`,  { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('effWings', `${EB}/Effect Pack #4/Effect Pack #4/Effect 15/Effect 15.png`,  { frameWidth: 256, frameHeight: 128 })
+    this.load.spritesheet('effSkull', `${EB}/Effect Pack #9/Effect Pack #9/Effect 5/Effect 5.png`,    { frameWidth: 144, frameHeight: 144 })
+    this.load.spritesheet('effBeast', `${EB}/Effect Pack #9/Effect Pack #9/Effect 8/Effect 8.png`,    { frameWidth: 96,  frameHeight: 96  })
 
     // Card images
     const CB = CARD_BASE
@@ -173,7 +176,6 @@ export class BattleScene extends Phaser.Scene {
     mk('runDust',  'runDust_',  8, 16, 0)
     mk('dashDust', 'dashDust_', 7, 18, 0)
     mk('landDust', 'landDust_', 6, 14, 0)
-    mk('gSlam', 'gSlam_', 10, 14, 0)
 
     mkSS('bugIdle',    'bugIdle',   5,  8)
     mkSS('bugMove',    'bugMove',   5, 12)
@@ -190,7 +192,13 @@ export class BattleScene extends Phaser.Scene {
     mkSS('hulkAttack', 'hulkAttack', 11, 10, 0)
     mkSS('hulkDeath',  'hulkDeath',  10,  8, 0)
 
-    mkSS('effAoe', 'effAoe', 10, 15, 0)
+    mkSS('effAoe',   'effAoe',    10, 15, 0)
+    mkSS('effFire',  'effFire',    5, 14, 0)
+    mkSS('effSpin',  'effSpin',   15, 14   )
+    mkSS('effFlame', 'effFlame',  15, 12, 0)
+    mkSS('effWings', 'effWings',   7, 12, 0)
+    mkSS('effSkull', 'effSkull',   7, 10, 0)
+    mkSS('effBeast', 'effBeast',   7, 10, 0)
   }
 
   // ─── PARALLAX ─────────────────────────────────────────────────────────────
