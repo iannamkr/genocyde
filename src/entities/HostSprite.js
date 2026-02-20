@@ -94,12 +94,11 @@ export class HostSprite {
     const firstState = USED_STATES[0]   // 'Idle'
     const firstKey   = `${firstState}_Torso_01`
 
-    // Invisible physics sprite — same body size / offset as old merged sprite
-    this._physBody = this.scene.physics.add.sprite(x, y, firstKey)
+    // Invisible physics body — image (not sprite) so it has no animation component.
+    // Removed from displayList immediately so it is never rendered at any depth.
+    this._physBody = this.scene.physics.add.image(x, y, firstKey)
       .setCollideWorldBounds(true)
-      .setAlpha(0)
-      .setVisible(false)   // belt-and-suspenders: fully removes from rendering
-      .setDepth(-100)
+    this.scene.sys.displayList.remove(this._physBody)
     this._physBody.setBodySize(28, 58).setOffset(34, 26)
     this.scene.physics.add.collider(this._physBody, platforms)
 
@@ -107,6 +106,9 @@ export class HostSprite {
     this._container = this.scene.add.container(x, y).setDepth(10)
 
     // Create one sprite per part in z-order.
+    // scene.add.sprite() registers in BOTH displayList AND updateList.
+    // We remove from displayList immediately so the container is the sole render path.
+    // The sprite stays in updateList so Phaser's preUpdate() still advances animation frames.
     // origin (0.5, 1) anchors each sprite's bottom-center so the foot line stays
     // fixed at GROUND regardless of how much artwork fills the canvas top-to-bottom.
     for (const part of PART_ORDER) {
@@ -115,6 +117,7 @@ export class HostSprite {
         : firstKey   // fallback for Weapon/FX which don't appear in Idle
 
       const spr = this.scene.add.sprite(0, PART_ORIGIN_Y, tex).setOrigin(0.5, 1)
+      this.scene.sys.displayList.remove(spr)  // prevent double-render via displayList
       spr.setVisible(false)   // play('Idle') below sets correct per-part visibility
       this._parts[part] = spr
       this._container.add(spr)
