@@ -14,12 +14,11 @@ const H       = 720
 const WORLD_W = 4000
 const GROUND  = 580
 
-const SPRITE_BASE  = 'assets/sprites/prototype/Sprites'
-const BG_BASE      = 'assets/sprites/background/Forest Parallax'
-const CARD_BASE    = 'assets/sprites/card'
+const BG_BASE      = 'assets/bg'
+const FX_BASE      = 'assets/fx'
+const CARD_BASE    = 'assets/card'
 const MONSTER_BASE = 'assets/monster'
-const EFFECT_BASE  = 'assets/sprites/effect'
-const CAMP_BASE    = 'assets/sprites/background/camp'
+const CAMP_BASE    = 'assets/camp'
 
 // Individual camp props — key maps to PNG in CAMP_BASE, sx = display scale
 const CAMP_PROPS = [
@@ -43,7 +42,7 @@ export class BattleScene extends Phaser.Scene {
     const pad  = n => String(n).padStart(2, '0')
 
     // Forest parallax backgrounds
-    load('bg_0', `${BG_BASE}/bg.png`)
+    load('bg_0', `${BG_BASE}/bg0.png`)
     load('bg_1', `${BG_BASE}/bg1.png`)
     load('bg_2', `${BG_BASE}/bg2.png`)
     load('bg_3', `${BG_BASE}/bg3.png`)
@@ -56,54 +55,53 @@ export class BattleScene extends Phaser.Scene {
     HostSprite.preload(this)
 
     // FX dust animations
-    for (let i = 1; i <= 8; i++) load(`runDust_${pad(i)}`,  `${SPRITE_BASE}/FX/RunDustFront/RunDustFront${pad(i)}.png`)
-    for (let i = 1; i <= 7; i++) load(`dashDust_${pad(i)}`, `${SPRITE_BASE}/FX/DashDust/DashDust${pad(i)}.png`)
-    for (let i = 1; i <= 6; i++) load(`landDust_${pad(i)}`, `${SPRITE_BASE}/FX/LandingDust/LandingDust${pad(i)}.png`)
+    for (let i = 1; i <= 8; i++) load(`runDust_${pad(i)}`,  `${FX_BASE}/runDust${pad(i)}.png`)
+    for (let i = 1; i <= 7; i++) load(`dashDust_${pad(i)}`, `${FX_BASE}/dashDust${pad(i)}.png`)
+    for (let i = 1; i <= 6; i++) load(`landDust_${pad(i)}`, `${FX_BASE}/landDust${pad(i)}.png`)
 
     // Monster spritesheets
     const MB = MONSTER_BASE
-    this.load.spritesheet('bugIdle',    `${MB}/BugZ/BugZ/Idle.png`,    { frameWidth: 64,  frameHeight: 64  })
-    this.load.spritesheet('bugAttack',  `${MB}/BugZ/BugZ/Attack.png`,  { frameWidth: 64,  frameHeight: 64  })
-    this.load.spritesheet('bugMove',    `${MB}/BugZ/BugZ/Move.png`,    { frameWidth: 64,  frameHeight: 64  })
-    this.load.spritesheet('bugDeath',   `${MB}/BugZ/BugZ/Death.png`,   { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('bugIdle',    `${MB}/bug/Idle.png`,    { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('bugAttack',  `${MB}/bug/Attack.png`,  { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('bugMove',    `${MB}/bug/Move.png`,    { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('bugDeath',   `${MB}/bug/Death.png`,   { frameWidth: 64,  frameHeight: 64  })
 
-    this.load.spritesheet('batIdle',    `${MB}/BatZ/BatZ/Idle.png`,    { frameWidth: 128, frameHeight: 128 })
-    this.load.spritesheet('batAttack',  `${MB}/BatZ/BatZ/Attack.png`,  { frameWidth: 128, frameHeight: 128 })
-    this.load.spritesheet('batMove',    `${MB}/BatZ/BatZ/Move.png`,    { frameWidth: 128, frameHeight: 128 })
-    this.load.spritesheet('batDeath',   `${MB}/BatZ/BatZ/Death.png`,   { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('batIdle',    `${MB}/bat/Idle.png`,    { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('batAttack',  `${MB}/bat/Attack.png`,  { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('batMove',    `${MB}/bat/Move.png`,    { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('batDeath',   `${MB}/bat/Death.png`,   { frameWidth: 128, frameHeight: 128 })
 
-    this.load.spritesheet('hulkIdle',   `${MB}/HulkZ/HulkZ/Idle.png`,   { frameWidth: 192, frameHeight: 96 })
-    this.load.spritesheet('hulkAttack', `${MB}/HulkZ/HulkZ/Attack.png`, { frameWidth: 192, frameHeight: 96 })
-    this.load.spritesheet('hulkWalk',   `${MB}/HulkZ/HulkZ/Walk.png`,   { frameWidth: 192, frameHeight: 96 })
-    this.load.spritesheet('hulkDeath',  `${MB}/HulkZ/HulkZ/Death.png`,  { frameWidth: 192, frameHeight: 96 })
+    this.load.spritesheet('hulkIdle',   `${MB}/hulk/Idle.png`,   { frameWidth: 192, frameHeight: 96 })
+    this.load.spritesheet('hulkAttack', `${MB}/hulk/Attack.png`, { frameWidth: 192, frameHeight: 96 })
+    this.load.spritesheet('hulkWalk',   `${MB}/hulk/Walk.png`,   { frameWidth: 192, frameHeight: 96 })
+    this.load.spritesheet('hulkDeath',  `${MB}/hulk/Death.png`,  { frameWidth: 192, frameHeight: 96 })
 
     // Effect spritesheets
-    const EB = EFFECT_BASE
-    this.load.spritesheet('effAoe',   `${EB}/Effect Pack #1/Effect Pack #1/Effect 1/Effect 1.png`,    { frameWidth: 128, frameHeight: 128 })
-    this.load.spritesheet('effFire',  `${EB}/Effect Pack #4/Effect Pack #4/Effect 3/Effect 3.png`,    { frameWidth: 64,  frameHeight: 64  })
-    this.load.spritesheet('effSpin',  `${EB}/Effect Pack #4/Effect Pack #4/Effect 9/Effect 9.png`,    { frameWidth: 64,  frameHeight: 64  })
-    this.load.spritesheet('effFlame', `${EB}/Effect Pack #4/Effect Pack #4/Effect 11/Effect 11.png`,  { frameWidth: 128, frameHeight: 128 })
-    this.load.spritesheet('effWings', `${EB}/Effect Pack #4/Effect Pack #4/Effect 15/Effect 15.png`,  { frameWidth: 256, frameHeight: 128 })
-    this.load.spritesheet('effSkull', `${EB}/Effect Pack #9/Effect Pack #9/Effect 5/Effect 5.png`,    { frameWidth: 144, frameHeight: 144 })
-    this.load.spritesheet('effBeast', `${EB}/Effect Pack #9/Effect Pack #9/Effect 8/Effect 8.png`,    { frameWidth: 96,  frameHeight: 96  })
+    this.load.spritesheet('effAoe',   `${FX_BASE}/effAoe.png`,   { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('effFire',  `${FX_BASE}/effFire.png`,  { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('effSpin',  `${FX_BASE}/effSpin.png`,  { frameWidth: 64,  frameHeight: 64  })
+    this.load.spritesheet('effFlame', `${FX_BASE}/effFlame.png`, { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('effWings', `${FX_BASE}/effWings.png`, { frameWidth: 256, frameHeight: 128 })
+    this.load.spritesheet('effSkull', `${FX_BASE}/effSkull.png`, { frameWidth: 144, frameHeight: 144 })
+    this.load.spritesheet('effBeast', `${FX_BASE}/effBeast.png`, { frameWidth: 96,  frameHeight: 96  })
 
     // Card images
     const CB = CARD_BASE
-    load('ci_standard', `${CB}/TheMortals/The Mortals/Standard/Standard.png`)
-    load('ci_wanderer', `${CB}/TheMortals/The Mortals/Wanderer/Wanderer.png`)
-    load('ci_wretch',   `${CB}/TheMortals/The Mortals/Wretch/Wretch.png`)
-    load('ci_hollow',   `${CB}/TheMortals/The Mortals/Hollow/Hollow.png`)
-    load('ci_valor',    `${CB}/The High Order/The Valor/The Valor.png`)
-    load('ci_inferno',  `${CB}/The High Order/The Inferno/The Inferno.png`)
-    load('ci_venom',    `${CB}/The High Order/The Venom/The Venom.png`)
-    load('ci_fleet',    `${CB}/The High Order/The Fleet/The Fleet.png`)
-    load('ci_blight',   `${CB}/The High Order/The Blight/The Blight.png`)
-    load('ci_hallow',   `${CB}/The High Order/The Hallow/The Hallow.png`)
-    load('ci_echo',     `${CB}/The High Order/The Echo/The Echo.png`)
-    load('ci_aegis',    `${CB}/The High Order/The Aegis/The Aegis.png`)
-    load('ci_sanctum',  `${CB}/The High Order/The Sanctum/The Sanctum.png`)
-    load('ci_solace',   `${CB}/The High Order/The Solace/The Solace.png`)
-    load('ci_requiem',  `${CB}/The High Order/The Requiem/The Requiem.png`)
+    load('ci_standard', `${CB}/ci_standard.png`)
+    load('ci_wanderer', `${CB}/ci_wanderer.png`)
+    load('ci_wretch',   `${CB}/ci_wretch.png`)
+    load('ci_hollow',   `${CB}/ci_hollow.png`)
+    load('ci_valor',    `${CB}/ci_valor.png`)
+    load('ci_inferno',  `${CB}/ci_inferno.png`)
+    load('ci_venom',    `${CB}/ci_venom.png`)
+    load('ci_fleet',    `${CB}/ci_fleet.png`)
+    load('ci_blight',   `${CB}/ci_blight.png`)
+    load('ci_hallow',   `${CB}/ci_hallow.png`)
+    load('ci_echo',     `${CB}/ci_echo.png`)
+    load('ci_aegis',    `${CB}/ci_aegis.png`)
+    load('ci_sanctum',  `${CB}/ci_sanctum.png`)
+    load('ci_solace',   `${CB}/ci_solace.png`)
+    load('ci_requiem',  `${CB}/ci_requiem.png`)
   }
 
   // ─── CREATE ───────────────────────────────────────────────────────────────
@@ -156,6 +154,7 @@ export class BattleScene extends Phaser.Scene {
   _buildAnims() {
     const pad = n => String(n).padStart(2, '0')
     const mk = (key, prefix, count, fps, repeat = -1) => {
+      if (this.anims.exists(key)) return
       this.anims.create({
         key,
         frames: Array.from({ length: count }, (_, i) => ({ key: `${prefix}${pad(i + 1)}` })),
@@ -163,6 +162,7 @@ export class BattleScene extends Phaser.Scene {
       })
     }
     const mkSS = (key, texKey, endFrame, fps, repeat = -1) => {
+      if (this.anims.exists(key)) return
       this.anims.create({
         key,
         frames: this.anims.generateFrameNumbers(texKey, { start: 0, end: endFrame }),
@@ -194,7 +194,7 @@ export class BattleScene extends Phaser.Scene {
 
     mkSS('effAoe',   'effAoe',    10, 15, 0)
     mkSS('effFire',  'effFire',    5, 14, 0)
-    mkSS('effSpin',  'effSpin',   15, 14   )
+    mkSS('effSpin',  'effSpin',   15, 14, 0)
     mkSS('effFlame', 'effFlame',  15, 12, 0)
     mkSS('effWings', 'effWings',   7, 12, 0)
     mkSS('effSkull', 'effSkull',   7, 10, 0)

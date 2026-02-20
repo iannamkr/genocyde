@@ -800,22 +800,6 @@ export const ANIM_MANIFEST = {
       "Weapon": 6
     }
   },
-  "GroundSlam": {
-    "dir": "SpritesSeparated/Combat/GroundSlam",
-    "fps": 12,
-    "loop": false,
-    "next": "SwordIdle",
-    "parts": {
-      "FX": 10,
-      "Head": 10,
-      "LeftArm": 10,
-      "LeftLeg": 10,
-      "RightArm": 10,
-      "RightLeg": 10,
-      "Torso": 10,
-      "Weapon": 10
-    }
-  },
   "Guard": {
     "dir": "SpritesSeparated/Combat/Guard",
     "fps": 10,

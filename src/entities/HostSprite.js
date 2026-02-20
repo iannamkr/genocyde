@@ -43,7 +43,7 @@ export class HostSprite {
 
   static preload(scene) {
     const pad = n => String(n).padStart(2, '0')
-    const base = 'assets/sprites/prototype'
+    const base = 'assets/player'
 
     for (const stateName of USED_STATES) {
       const cfg = ANIM_MANIFEST[stateName]
