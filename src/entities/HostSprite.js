@@ -94,12 +94,14 @@ export class HostSprite {
     const firstState = USED_STATES[0]   // 'Idle'
     const firstKey   = `${firstState}_Torso_01`
 
-    // Invisible physics body — image (not sprite) so it has no animation component.
-    // Removed from displayList immediately so it is never rendered at any depth.
-    this._physBody = this.scene.physics.add.image(x, y, firstKey)
+    // Invisible physics body — uses 1px 'pixel' texture so it never bleeds through
+    // transparent areas regardless of camera or rendering order.
+    this._physBody = this.scene.physics.add.image(x, y, 'pixel')
       .setCollideWorldBounds(true)
-    this.scene.sys.displayList.remove(this._physBody)
-    this._physBody.setBodySize(28, 58).setOffset(34, 26)
+      .setAlpha(0)
+    // offset(-14,-16): 1×1 픽셀 텍스처 기준으로 body bottom이 GROUND에 오도록 보정
+    // (원래 offset(34,26)은 96×84 텍스처 origin(0.5,0.5) 기준이었음)
+    this._physBody.setBodySize(28, 58).setOffset(-14, -16)
     this.scene.physics.add.collider(this._physBody, platforms)
 
     // Visual container — synced to physics body each update()
