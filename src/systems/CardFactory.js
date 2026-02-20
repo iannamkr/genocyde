@@ -133,8 +133,8 @@ export class CardFactory {
     if (this._uiObjs?.geneItem) {
       const item = this._uiObjs.geneItem
       item.collected = true
-      this.scene.tweens.killTweensOf(item.gfx)
-      this.scene.tweens.killTweensOf(item.label)
+      // this.scene.tweens.killTweensOf(item.gfx)
+      // this.scene.tweens.killTweensOf(item.label)
       item.gfx.destroy(); item.label.destroy()
     }
     this._hideUI()

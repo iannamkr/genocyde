@@ -61,8 +61,7 @@ export class BattleScene extends Phaser.Scene {
     for (let i = 1; i <= 6; i++) load(`landDust_${pad(i)}`, `${SPRITE_BASE}/FX/LandingDust/LandingDust${pad(i)}.png`)
 
     // Combat VFX
-    for (let i = 1; i <= 4;  i++) load(`airSlash_${pad(i)}`, `${SPRITE_BASE}/Combat/AirSlash/AirSlash${pad(i)}.png`)
-    for (let i = 1; i <= 10; i++) load(`gSlam_${pad(i)}`,    `${SPRITE_BASE}/Combat/GroundSlam/GroundSlam${pad(i)}.png`)
+    for (let i = 1; i <= 10; i++) load(`gSlam_${pad(i)}`, `${SPRITE_BASE}/Combat/GroundSlam/GroundSlam${pad(i)}.png`)
 
     // Monster spritesheets
     const MB = MONSTER_BASE
@@ -83,8 +82,7 @@ export class BattleScene extends Phaser.Scene {
 
     // Effect spritesheets
     const EB = EFFECT_BASE
-    this.load.spritesheet('effAoe',   `${EB}/Effect Pack #1/Effect Pack #1/Effect 1/Effect 1.png`, { frameWidth: 128, frameHeight: 128 })
-    this.load.spritesheet('effHeavy', `${EB}/Effect Pack #1/Effect Pack #1/Effect 3/Effect 3.png`, { frameWidth: 128, frameHeight: 128 })
+    this.load.spritesheet('effAoe', `${EB}/Effect Pack #1/Effect Pack #1/Effect 1/Effect 1.png`, { frameWidth: 128, frameHeight: 128 })
 
     // Card images
     const CB = CARD_BASE
@@ -175,8 +173,7 @@ export class BattleScene extends Phaser.Scene {
     mk('runDust',  'runDust_',  8, 16, 0)
     mk('dashDust', 'dashDust_', 7, 18, 0)
     mk('landDust', 'landDust_', 6, 14, 0)
-    mk('airSlash', 'airSlash_', 4, 16, 0)
-    mk('gSlam',    'gSlam_',   10, 14, 0)
+    mk('gSlam', 'gSlam_', 10, 14, 0)
 
     mkSS('bugIdle',    'bugIdle',   5,  8)
     mkSS('bugMove',    'bugMove',   5, 12)
@@ -193,8 +190,7 @@ export class BattleScene extends Phaser.Scene {
     mkSS('hulkAttack', 'hulkAttack', 11, 10, 0)
     mkSS('hulkDeath',  'hulkDeath',  10,  8, 0)
 
-    mkSS('effAoe',   'effAoe',   10, 15, 0)
-    mkSS('effHeavy', 'effHeavy',  6, 14, 0)
+    mkSS('effAoe', 'effAoe', 10, 15, 0)
   }
 
   // ─── PARALLAX ─────────────────────────────────────────────────────────────

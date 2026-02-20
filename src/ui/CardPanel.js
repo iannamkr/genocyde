@@ -121,10 +121,8 @@ export class CardPanel {
   _executeCard(card) {
     const s = this.scene
     switch (card.type) {
-      case 'slash': s.host.startAttack('light', card.dmg); break
-      case 'heavy': s.host.startAttack('heavy', card.dmg); break
-      case 'aoe':   s.host.triggerAoE(card.dmg); break
-      case 'dash':  s.host.triggerDash(); break
+      case 'aoe':  s.host.triggerAoE(card.dmg); break
+      case 'dash': s.host.triggerDash(); break
       case 'heal':
         s.msg.floatText(s.host.sprite.x, s.host.sprite.y - 30, `+${-card.hpCost} HP`, C.GREEN)
         break
@@ -132,7 +130,6 @@ export class CardPanel {
         s.msg.floatText(s.host.sprite.x, s.host.sprite.y - 30, '스트레스 완화', C.PURPLE)
         break
     }
-    s.host.playSkillEffect(card.type)
   }
 
   _hitTestCard(px, py, b) {

@@ -5,20 +5,16 @@ import { ANIM_MANIFEST } from '../data/animManifest.js'
 const PART_ORDER = ['RightLeg', 'RightArm', 'Torso', 'Head', 'LeftLeg', 'LeftArm', 'Weapon', 'FX']
 
 // Y offset so each part sprite's bottom edge (origin 0.5,1) aligns with the
-// physics body's bottom (physBody.y + 84/2 = GROUND).  All canvases are 96×84.
+// physics body center. All part canvases are 96×84px; 84/2 = 42.
 const PART_ORIGIN_Y = 42
 
 // ─── GAME STATES TO PRELOAD ───────────────────────────────────────────────────
 // Add state names here to enable them; must exist in ANIM_MANIFEST.
 export const USED_STATES = [
-  'Idle',
   'Run',
   'Die',
-  'SwordIdle',
   'SwordRun',
   'SwordSlash01',
-  'SwordRunSlash',
-  'ShockHeavy',
   'Stunned',
 ]
 
@@ -91,16 +87,14 @@ export class HostSprite {
   // ─── BUILD (call after preload + buildAnims) ──────────────────────────────
 
   build(x, y, platforms) {
-    const firstState = USED_STATES[0]   // 'Idle'
+    const firstState = USED_STATES[0]   // 'Run'
     const firstKey   = `${firstState}_Torso_01`
 
-    // Invisible physics body — uses 1px 'pixel' texture so it never bleeds through
-    // transparent areas regardless of camera or rendering order.
+    // Invisible physics body — uses 1×1 'pixel' texture so it never bleeds through.
+    // setOffset(-14,-16) aligns body.bottom with GROUND for the 1×1 texture.
     this._physBody = this.scene.physics.add.image(x, y, 'pixel')
       .setCollideWorldBounds(true)
       .setAlpha(0)
-    // offset(-14,-16): 1×1 픽셀 텍스처 기준으로 body bottom이 GROUND에 오도록 보정
-    // (원래 offset(34,26)은 96×84 텍스처 origin(0.5,0.5) 기준이었음)
     this._physBody.setBodySize(28, 58).setOffset(-14, -16)
     this.scene.physics.add.collider(this._physBody, platforms)
 
@@ -108,24 +102,22 @@ export class HostSprite {
     this._container = this.scene.add.container(x, y).setDepth(10)
 
     // Create one sprite per part in z-order.
-    // scene.add.sprite() registers in BOTH displayList AND updateList.
-    // We remove from displayList immediately so the container is the sole render path.
-    // The sprite stays in updateList so Phaser's preUpdate() still advances animation frames.
-    // origin (0.5, 1) anchors each sprite's bottom-center so the foot line stays
-    // fixed at GROUND regardless of how much artwork fills the canvas top-to-bottom.
+    // Removed from displayList immediately so the container is the sole render path;
+    // stays in updateList so Phaser advances animation frames via preUpdate().
+    // origin(0.5, 1) anchors each sprite's bottom-center to the foot line.
     for (const part of PART_ORDER) {
       const tex = this.scene.textures.exists(`${firstState}_${part}_01`)
         ? `${firstState}_${part}_01`
-        : firstKey   // fallback for Weapon/FX which don't appear in Idle
+        : firstKey   // fallback for Weapon/FX parts
 
       const spr = this.scene.add.sprite(0, PART_ORIGIN_Y, tex).setOrigin(0.5, 1)
-      this.scene.sys.displayList.remove(spr)  // prevent double-render via displayList
-      spr.setVisible(false)   // play('Idle') below sets correct per-part visibility
+      this.scene.sys.displayList.remove(spr)
+      spr.setVisible(false)
       this._parts[part] = spr
       this._container.add(spr)
     }
 
-    this.play('Idle')
+    this.play('Run')
   }
 
   // ─── PLAY ─────────────────────────────────────────────────────────────────
@@ -203,9 +195,6 @@ export class HostSprite {
   clearTint() {
     for (const spr of Object.values(this._parts)) spr.clearTint()
   }
-
-  /** Read-only access to individual part sprites (for one-shot event hooks). */
-  get parts() { return this._parts }
 
   // ─── DESTROY ──────────────────────────────────────────────────────────────
 
